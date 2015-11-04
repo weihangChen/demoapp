@@ -1,0 +1,79 @@
+﻿@model DemoApp.Controllers.MyViewModel
+<h2>demonstration of generic paging, sorting and freetext search using expressiontree</h2>
+<div class="row">
+    <form id="gridForm">
+        <div class="row col-xs-6">
+            <div class="col-xs-6">
+                @Html.EditorFor(model => model.FreeText, new { htmlAttributes = new { placeholder = "phonenr search", @class = "form-control", @id = "freetxt1" } })
+            </div>
+            <div class="col-xs-6">
+                <button class="btn btn-warning" id="clearfreetxt1">Clear Text</button>
+            </div>
+        </div>
+        <div id="gridcontainer" class="row top20 col-xs-12">
+            @Html.Partial("_Grid", Model)
+        </div>
+    </form>
+</div>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $(document).on("click", ".qiSortColumn", function (e) {
+                e.preventDefault();
+                var sortColumn = $(e.target).text().trim();
+                $("#SortingColumnNew").val(sortColumn);
+                SetShouldReOrder();
+                PostFormGrid();
+            });
+
+            $(document).on("click", '.spd', function (e) {
+                e.preventDefault();
+                var submitpageindex = $(e.target).data("paging-index");
+                $('#PageIndexSubmit').val(submitpageindex);
+                PostFormGrid();
+            });
+
+            $(document).on("keyup", '#freetxt1', function (e) {
+                e.preventDefault();
+                var tmp = $(e.target).val()
+                if (tmp != null && tmp.length > 4) {
+                    //need to set ShouldResetPageIndex to true before submiting the form
+                    ShouldResetPageIndex();
+                    PostFormGrid();
+                }
+            });
+
+
+            $('#clearfreetxt1').on('click', function (e) {
+                e.preventDefault();
+                $('#freetxt1').val("");
+                ShouldResetPageIndex();
+                PostFormGrid();
+            });
+
+
+            function PostFormGrid() {
+                var form = $("#gridForm");
+                var url = "@Url.Action("GridFilter", "Home")";
+                var api = new myApi();
+                api.postwithform({
+                    url: url,
+                    form: form,
+                    success: function (result) {
+                        //if there is status code, 200 or 400
+                        if (result.statuscode == "400")
+                            api.handleError(result);
+                        else if (result.statuscode == "200") {
+                            $('#gridcontainer').empty().html(result.data);
+                        }
+                    }
+                });
+            }
+        })
+    </script>
+    @Scripts.Render("~/bundles/myjs")
+
+
+
+
+}

@@ -1,0 +1,38 @@
+﻿@model DemoApp.Controllers.MyViewModel
+<table class="table">
+    <tr>
+        <th>
+            <span><a class="qiSortColumn">Name</a></span>
+        </th>
+        <th>
+            <span><a class="qiSortColumn">BornDate</a></span>
+        </th>
+        <th>
+            <span><a class="qiSortColumn">PhoneNr</a></span>
+        </th>
+        <th>
+            <span><a class="qiSortColumn">HasSupernaturalAbility</a></span>
+        </th>
+    </tr>
+
+    @foreach (var item in Model.Persons)
+    {
+        <tr>
+            <td>
+                @item.Name
+            </td>
+            <td>
+                @item.BornDate
+            </td>
+            <td>
+                @item.PhoneNr
+            </td>
+            <td>
+                @item.HasSupernaturalAbility
+            </td>
+        </tr>
+    }
+
+</table>
+@Html.Partial("_GenericSort", Model.AsSortingModel)
+@Html.Partial("_GenericPaging", Model.AsSortingModel)

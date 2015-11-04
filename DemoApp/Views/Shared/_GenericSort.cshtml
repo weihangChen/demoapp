@@ -1,0 +1,22 @@
+﻿@using Helpers.GenericModel
+@model SortingModel
+<div class="row" style="display:none">
+    @Html.TextBoxFor(x => x.SortingColumnCurrent)
+    @Html.TextBoxFor(x => x.SortingColumnNew)
+    @Html.TextBoxFor(x => x.SortingOrderCurrent)
+    @Html.TextBoxFor(x => x.ShouldReOrder, new { @id = "ShouldReOrder" })
+</div>
+
+@*@section Scripts{
+    <script>
+        function SetShouldReOrder() {
+            $('#ShouldReOrder').val(true);
+        }
+
+        function ShouldResetPageIndex() {
+            alert("reset page index")
+            $('#ShouldResetPageIndex').val(true);
+        }
+    </script>
+}*@
+

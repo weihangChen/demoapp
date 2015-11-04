@@ -1,0 +1,20 @@
+﻿@using Helpers.GenericModel
+@model SortingFilterModel
+<div class="row col-xs-12">
+    <!--first page-->
+    <a data-paging-index="1" class="spd">first</a>
+    <!--input select index-->
+    @foreach (var data in Model.SinglePageDatas)
+    {
+        <a data-paging-index="@data.PageLabel" class="@data.PageCssClass">@data.PageLabel</a>
+    }
+    <!--last page-->
+    <a data-paging-index="@Model.PageTotal" class="spd">last</a>
+
+    <!-- some important supporting params -->
+    @Html.HiddenFor(x => x.PageIndex, new { @id = "PageIndexSubmit" })
+    @Html.HiddenFor(x => x.PageTotal)
+    @Html.HiddenFor(x => x.ShouldResetPageIndex, new { @id = "ShouldResetPageIndex" })
+
+</div>
+
