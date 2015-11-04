@@ -4,7 +4,7 @@
     <form id="gridForm">
         <div class="row col-xs-6">
             <div class="col-xs-6">
-                @Html.EditorFor(model => model.FreeText, new { htmlAttributes = new { placeholder = "phonenr search", @class = "form-control", @id = "freetxt1" } })
+                @Html.EditorFor(model => model.FreeText, new { htmlAttributes = new { placeholder = "phonenr search - at least 5 characters", @class = "form-control", @id = "freetxt1" } })
             </div>
             <div class="col-xs-6">
                 <button class="btn btn-warning" id="clearfreetxt1">Clear Text</button>
