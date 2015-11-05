@@ -66,14 +66,14 @@ namespace Helpers.Service
             IQueryable<T> results = null;
             if (Model.ShouldResetPageIndex || Model.PageIndex > Model.PageTotal)
                 Model.PageIndex = 1;
-
+            //if query contains no order by, perform it on the default column
+            if (!Model.HasBeenSorted)
+                queryableData = SortingService.SortQueryDefaultColumn(queryableData, Model);
             if (Model.PageIndex == 1)
                 results = queryableData.Take(Model.PageSize);
             else
             {
-                //if query contains no order by, perform it on the default column
-                if (!Model.HasBeenSorted)
-                    queryableData = SortingService.SortQueryDefaultColumn(queryableData, Model);
+
                 results = queryableData.Skip((Model.PageIndex - 1) * Model.PageSize).Take(Model.PageSize);
             }
             Model.ShouldResetPageIndex = false;
