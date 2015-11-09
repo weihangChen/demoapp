@@ -96,7 +96,6 @@
     <Compile Include="Mock\MVCMockHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
-    <Compile Include="RemoveMeTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />

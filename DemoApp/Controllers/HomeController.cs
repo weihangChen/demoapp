@@ -39,7 +39,6 @@ namespace DemoApp.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
-
             //demo 1 - use factory to create a superman
             var superman = ObjectFactory.ResolveObjectByParameterType<ISuperman>(new Person { Name = "Marc", HasSupernaturalAbility = true }, Ability.MetalLiquidBody);
 
@@ -76,7 +75,7 @@ namespace DemoApp.Controllers
 
         public ActionResult GridDisplay()
         {
-            var data = GetDummy().OrderByDescending(x=>x.BornDate).AsQueryable();
+            var data = GetDummy().OrderByDescending(x => x.BornDate).AsQueryable();
             var vm = new MyViewModel { SortingColumnCurrent = "BornDate" };
             vm.Persons = FilterService.GenericPaging(data, vm.AsSortingFilterModel).ToList();
             return View(vm);
@@ -133,9 +132,12 @@ namespace DemoApp.Controllers
         }
 
 
+        
+
+
     }
 
-
+    
     public class MyViewModel : SortingFilterModel
     {
         public MyViewModel()
