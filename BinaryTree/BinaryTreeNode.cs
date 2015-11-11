@@ -13,6 +13,7 @@ namespace BinaryTree
         public BinaryTreeNode<T> RightNode { get; internal set; }
         public BinaryTreeNode<T> ParentNode { get; internal set; }
 
+
         //ctor
         public BinaryTreeNode(T data)
         {
