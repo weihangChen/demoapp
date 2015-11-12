@@ -106,6 +106,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AlgorithmStub\AlgorithmStub.csproj">
+      <Project>{907edeb2-aa31-4e23-bb89-45bee77607d7}</Project>
+      <Name>AlgorithmStub</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BinaryTree\BinaryTree.csproj">
       <Project>{73825ad0-083a-403c-8fd3-3804f76dcd86}</Project>
       <Name>BinaryTree</Name>

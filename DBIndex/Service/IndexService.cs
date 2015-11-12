@@ -21,6 +21,7 @@ namespace DatabaseIndex.Service
 
         /// <summary>
         /// Create an index on a table's property
+        /// ex.  indexService.CreateIndex("Name", item => item.Name);
         /// </summary>
         /// <param name="key">index unique key</param>
         /// <param name="propertyFunc">func to extract the property</param>
@@ -31,6 +32,7 @@ namespace DatabaseIndex.Service
 
             if (!_IndexeHandlers.ContainsKey(itemType))
             {
+                //_IndexeHandlers.Add(String, new IndexHandler<String, Person>(Persons));
                 _IndexeHandlers.Add(itemType, new IndexHandler<IComparable, TEntity>(_tableData));
                 _IndexeHandlers[itemType].CreateIndex(key, propertyFunc);
             }
@@ -67,13 +69,14 @@ namespace DatabaseIndex.Service
         /// <returns>every row found in the values range</returns>
         public IEnumerable<TEntity> RetrieveData(string indexkey, IComparable from, IComparable to) //Match query on a single field, several values
         {
-            IndexHandler<IComparable, TEntity> handler;
-            if (ContainsIndex(indexkey, out handler))
-            {
-                return handler.Retrieve(indexkey, from, to);
-            }
+            //IndexHandler<IComparable, TEntity> handler;
+            //if (ContainsIndex(indexkey, out handler))
+            //{
+            //    return handler.Retrieve(indexkey, from, to);
+            //}
 
-            return null;
+            var handler = _IndexeHandlers.Values.Where(x => x.ContainsKey(indexkey)).FirstOrDefault();
+            return handler != null ? handler.Retrieve(indexkey, from, to) : new List<TEntity>();
         }
 
         /// <summary>
@@ -123,6 +126,14 @@ namespace DatabaseIndex.Service
             handler = null;
             return false;
         }
+
+        private IndexHandler<IComparable, TEntity> GetIndexHandler(string indexkey)
+        {
+            return _IndexeHandlers.Values.Where(x => x.ContainsKey(indexkey)).FirstOrDefault();
+        }
+
+
+
 
 
         /// <summary>

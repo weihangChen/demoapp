@@ -12,6 +12,7 @@ using Domain.Model;
 using DataAccess.DAL;
 using DatabaseIndex.Service;
 using System.Linq.Expressions;
+using System.Diagnostics;
 
 namespace DemoApp.Tests.Controllers
 {
@@ -36,6 +37,7 @@ namespace DemoApp.Tests.Controllers
             Persons.Add(new Person { BornDate = new DateTime(1870, 10, 11), PersonID = 8, Name = "lee", PhoneNr = "555550" });
             Persons.Add(new Person { BornDate = new DateTime(1871, 10, 11), PersonID = 9, Name = "jerry", PhoneNr = "00000-11", HasSupernaturalAbility = true });
             Persons.Add(new Person { BornDate = new DateTime(1872, 10, 11), PersonID = 10, Name = "ben", PhoneNr = "00000-22" });
+            Persons.Add(new Person { BornDate = new DateTime(1872, 10, 11), PersonID = 10, Name = "ben", PhoneNr = "00000-22" });
 
             // all data access set up 
             var mockingContext = new DOTNETMockingContext<MyDbContext>();
@@ -49,19 +51,37 @@ namespace DemoApp.Tests.Controllers
         [TestMethod]
         public void IndexBTreeTest()
         {
-
+            var Persons = workunit.PersonRepository.GetAsList();
             var indexService = new IndexService<Person>(workunit.PersonRepository.GetAsList());
 
             //http://stackoverflow.com/questions/16676854/lambda-property-value-selector-as-parameter
             Func<Person, IComparable> propertyFunc = x => x.Name;
             Func<Person, string> propertyFunc1 = x => x.Name;
 
+
+
             indexService.CreateIndex("Name", item => item.Name);
 
-            var result = indexService.RetrieveData("Name", "lee").ToList();
+            var result = indexService.RetrieveData("Name", "ben").ToList();
+            Assert.IsTrue(result.Count > 0);
+            //
+            result.Clear();
+            indexService.CreateIndex("PersonID", item => item.PersonID);
+            result = indexService.RetrieveData("PersonID", 6, 9).ToList();
+            Assert.IsTrue(result.Count > 0);
 
 
+            //
+            result.Clear();
+            indexService.DropIndex("PersonID");
+            result = indexService.RetrieveData("PersonID", 6, 9).ToList();
+            Assert.IsTrue(result.Count == 0);
 
+            //
+            //result.Clear();
+            //indexService.CreateIndex("PhoneNr", item => item.PhoneNr);
+            //var row = indexService.RetrieveData("PhoneNr", 123451, 123457);
+            //Assert.IsTrue(result.Count > 0);
 
         }
 

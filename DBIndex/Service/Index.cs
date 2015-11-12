@@ -29,6 +29,8 @@ namespace DatabaseIndex.Service
         //and also providing a Function that determine which property will be indexed.
         private void InitIndex(IEnumerable<TRow> tableData)
         {
+            //TIndex - Field like Name, Age    TRow - Entity like Person
+
             var groups = tableData.GroupBy(row => PropertyFunc(row));
             List<IndexNode<TIndex, TRow>> nodes = new List<IndexNode<TIndex, TRow>>();
 
@@ -53,16 +55,15 @@ namespace DatabaseIndex.Service
         {
             ICollection<IndexNode<TIndex, TRow>> indexNodes = FindNodes(from, to);
 
-            ICollection<TRow> rowsCollection = new Collection<TRow>();
-
-            foreach (var indexNode in indexNodes)
-            {
-                foreach (var row in indexNode.Rows.Values)
-                {
-                    rowsCollection.Add(row);
-                }
-            }
-
+            //ICollection<TRow> rowsCollection = new Collection<TRow>();
+            //foreach (var indexNode in indexNodes)
+            //{
+            //    foreach (var row in indexNode.Rows.Values)
+            //    {
+            //        rowsCollection.Add(row);
+            //    }
+            //}
+            var rowsCollection = indexNodes.SelectMany(x => x.Rows.Values).ToList();
             return rowsCollection;
         }
 
