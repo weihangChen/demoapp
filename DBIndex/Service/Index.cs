@@ -124,7 +124,7 @@ namespace DatabaseIndex.Service
         {
             get
             {
-                return _tree.Sum(x=>x.Count);
+                return _tree.Sum(x => x.Count);
             }
         }
     }
