@@ -32,7 +32,7 @@ namespace DatabaseIndex.Service
             //TIndex - Field like Name, Age    TRow - Entity like Person
 
             var groups = tableData.GroupBy(row => PropertyFunc(row));
-            List<IndexNode<TIndex, TRow>> nodes = new List<IndexNode<TIndex, TRow>>();
+            var nodes = new List<IndexNode<TIndex, TRow>>();
 
             foreach (var group in groups)
             {
@@ -114,8 +114,8 @@ namespace DatabaseIndex.Service
         //return indexnodes from a given range
         private ICollection<IndexNode<TIndex, TRow>> FindNodes(TIndex from, TIndex to)
         {
-            IndexNode<TIndex, TRow> fromNode = new IndexNode<TIndex, TRow>(from);
-            IndexNode<TIndex, TRow> toNode = new IndexNode<TIndex, TRow>(to);
+            var fromNode = new IndexNode<TIndex, TRow>(from);
+            var toNode = new IndexNode<TIndex, TRow>(to);
 
             return _tree.Contains(fromNode, toNode).ToList();
         }
@@ -124,13 +124,7 @@ namespace DatabaseIndex.Service
         {
             get
             {
-                int count = 0;
-                foreach (var indexNode in _tree)
-                {
-                    count += indexNode.Count;
-                }
-
-                return count;
+                return _tree.Sum(x=>x.Count);
             }
         }
     }

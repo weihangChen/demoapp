@@ -15,16 +15,11 @@ namespace DatabaseIndex.Service
 
         public IndexService(IEnumerable<TEntity> tableData)
         {
-            UpdateTableSource(tableData);
-            _IndexeHandlers = new Dictionary<Type, IndexHandler<IComparable, TEntity>>();
+            this._tableData = tableData;
+            this._IndexeHandlers = new Dictionary<Type, IndexHandler<IComparable, TEntity>>();
         }
 
-        /// <summary>
-        /// Create an index on a table's property
-        /// ex.  indexService.CreateIndex("Name", item => item.Name);
-        /// </summary>
-        /// <param name="key">index unique key</param>
-        /// <param name="propertyFunc">func to extract the property</param>
+
         public void CreateIndex(string key, Func<TEntity, IComparable> propertyFunc)
         {
             var item = propertyFunc(_tableData.First());
@@ -44,20 +39,12 @@ namespace DatabaseIndex.Service
             }
         }
 
-        /// <summary>
-        /// Remove an index
-        /// </summary>
-        /// <param name="indexkey">index key</param>
-        /// <returns>true if found and removed</returns>
+
         public bool DropIndex(string indexkey)
         {
-            IndexHandler<IComparable, TEntity> handler;
-            if (ContainsIndex(indexkey, out handler))
-            {
-                return handler.DropIndex(indexkey);
-            }
+            var handler = _IndexeHandlers.Values.FirstOrDefault(x => x.ContainsKey(indexkey));
+            return handler != null ? handler.DropIndex(indexkey) : false;
 
-            return false;
         }
 
         /// <summary>
@@ -69,13 +56,7 @@ namespace DatabaseIndex.Service
         /// <returns>every row found in the values range</returns>
         public IEnumerable<TEntity> RetrieveData(string indexkey, IComparable from, IComparable to) //Match query on a single field, several values
         {
-            //IndexHandler<IComparable, TEntity> handler;
-            //if (ContainsIndex(indexkey, out handler))
-            //{
-            //    return handler.Retrieve(indexkey, from, to);
-            //}
-
-            var handler = _IndexeHandlers.Values.Where(x => x.ContainsKey(indexkey)).FirstOrDefault();
+            var handler = _IndexeHandlers.Values.FirstOrDefault(x => x.ContainsKey(indexkey));
             return handler != null ? handler.Retrieve(indexkey, from, to) : new List<TEntity>();
         }
 
@@ -111,64 +92,8 @@ namespace DatabaseIndex.Service
             return result;
         }
 
-        //Checks if a indexhandler exists for a given key
-        //returns as out parameter the handler which contains the found key
-        private bool ContainsIndex(string indexkey, out IndexHandler<IComparable, TEntity> handler)
-        {
-            foreach (var savedHandler in _IndexeHandlers.Values)
-            {
-                if (savedHandler.ContainsKey(indexkey))
-                {
-                    handler = savedHandler;
-                    return true;
-                }
-            }
-            handler = null;
-            return false;
-        }
-
-        private IndexHandler<IComparable, TEntity> GetIndexHandler(string indexkey)
-        {
-            return _IndexeHandlers.Values.Where(x => x.ContainsKey(indexkey)).FirstOrDefault();
-        }
 
 
 
-
-
-        /// <summary>
-        /// Check if an index exists
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public bool ContainsIndex(string key)
-        {
-            foreach (var savedHandler in _IndexeHandlers.Values)
-            {
-                if (savedHandler.ContainsKey(key))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Update the table data with new table.
-        /// Please note, updating the data will also erase all indexes.
-        /// </summary>
-        /// <param name="newTable">new table data</param>
-        public void UpdateTableSource(IEnumerable<TEntity> newTable)
-        {
-            if (newTable != null)
-            {
-                _tableData = newTable;
-                _IndexeHandlers = new Dictionary<Type, IndexHandler<IComparable, TEntity>>();
-            }
-            else
-            {
-                throw new NullReferenceException("Table data can not be null");
-            }
-        }
     }
 }
